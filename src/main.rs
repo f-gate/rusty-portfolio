@@ -5,7 +5,7 @@ use rocket_contrib::templates::Template;
 
 #[get("/")]
 fn index() -> Template {
-    "Hello, world!"
+    Template::render("template-name", &context)
 }
 
 #[get("/algorithms")]
@@ -14,12 +14,12 @@ fn algorithms() -> Template {
 }
 
 #[get("/cryptography")]
-fn algorithms() -> Template {
+fn cryptography() -> Template {
     "Hello, world!"
 }
 
 #[get("/data-structures")]
-fn algorithms() -> Template {
+fn data_structures() -> Template {
     "Hello, world!"
 }
 
@@ -36,7 +36,9 @@ fn default_catcher(status: Status, request: &Request) {
 #[launch]
 fn rocket() -> _ {
     rocket::build().mount("/", routes![index])
-                    .mount("/simple", routes![algorithms])
+                    .mount("/", routes![algorithms])
+                    .mount("/", routes![cryptography])
+                    .mount("/", routes![data_structures])
                     .register("/", catchers![default_catcher])
                     .register("/", catchers![not_found])
                     .attach(Template::fairing())
