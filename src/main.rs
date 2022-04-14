@@ -1,26 +1,44 @@
 #[macro_use] extern crate rocket;
+extern crate rocket;
+extern crate rocket_dyn_templates;
+
 use rocket::Request;
 use rocket::http::Status;
-use rocket_contrib::templates::Template;
+use rocket::response::content::Json;
+use rocket::serde::Serialize;
+use rocket_dyn_templates::handlebars::Handlebars;
+use rocket_dyn_templates::Template;
 
 #[get("/")]
-fn index() -> Template {
-    Template::render("template-name", &context)
+fn index() {
+    #[derive(Serialize)]
+    struct Context {
+        title: String,
+        expl: String
+    }
+    let context = Context {
+        title: String::from("Rust Portfolio"),
+        expl: String::from("loremipsum")
+    };
+    let mut hb = Handlebars::new();
+    assert!(hb.register_template_file("index", "index.hbs").is_ok());
+
+    hb.render_template("index", &context);
 }
 
 #[get("/algorithms")]
-fn algorithms() -> Template {
-    "Hello, world!"
+fn algorithms() -> () {
+  
 }
 
 #[get("/cryptography")]
-fn cryptography() -> Template {
-    "Hello, world!"
+fn cryptography() -> () {
+  
 }
 
 #[get("/data-structures")]
-fn data_structures() -> Template {
-    "Hello, world!"
+fn data_structures() -> () {
+  
 }
 
 #[catch(404)]
